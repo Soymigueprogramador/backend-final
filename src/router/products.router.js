@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import Container from '../conteiner.js'; 
+//import Container from '../conteiner.js'; 
 const archivo = './../productos.txt';
 import multer from 'multer'
 
 const router = Router(); 
-const containerProducts = new Container(); 
+//const containerProducts = new Container(); 
 
 const storage = multer.diskStorage({ 
     destination: function (req, file, cb) {
