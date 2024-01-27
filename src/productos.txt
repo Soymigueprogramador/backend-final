@@ -1,0 +1,10 @@
+[{"name":"llavero1","price":"$100","thumbnail":"llavero1.jpg","id":1},
+{"name":"llavero2","price":"$120","thumbnail":"Llavero con cadena 20mm (3).jpg","id":2},
+{"name":"llavero3","price":"$150","thumbnail":"llavero-cinta.jpg","id":3},
+{"name":"vaso1","price":"$200","thumbnail":"vaso1.jfif","id":4},
+{"name":"vaso2","price":"$200","thumbnail":"vaso2.jpg","id":5},
+{"name":"vaso3","price":"$200","thumbnail":"vaso3.png","id":6},
+{"name":"tenedor","price":"$50","thumbnail":"tenedor.jpg","id":7},
+{"name":"cuchara","price":"$50","thumbnail":"cuchara.jfif","id":8},
+{"name":"cucharon","price":"$50","thumbnail":"cucharon.jpg","id":9},
+{"name":"porta celular ","price":"$500","thumbnail":"porta-celular.jpg","id":10}]
