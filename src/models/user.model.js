@@ -42,17 +42,3 @@ userSchema.methods.passwordCorrect = function(password, callback) {
 };
 
 export const userModel = mongoose.model(usersCollection, userSchema);
-
-// Usar el modelo de usuario
-const usuario = new userModel({
-  email: 'correo@ejemplo.com',
-  password: 'contraseña',
-});
-
-usuario.save((err, resultado) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('Usuario guardado correctamente:', resultado);
-  }
-});

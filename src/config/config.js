@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import { Command, Option } from 'commander';
 const programa = new Command(); 
 
-let pathenv = './src/.env.${opciones.modo}'; 
+//let pathenv = '../../.env${opciones.modo}'; 
 
-dotenv.config({ path: pathenv, override: true });
+dotenv.config({ path: './src/.env', override: true });
 
 export const config = {
     MONGO_URL: process.env.MONGO_URL,
