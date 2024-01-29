@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 // La cantidad de veces que se estará encriptando el password. 
 const encriptarPassword = 10;
-const usersCollection = 'users1';
+const usersCollection = 'soymigueprogramador';
 
 // Esquema del usuario.
 const userSchema = new mongoose.Schema({

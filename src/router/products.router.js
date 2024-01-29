@@ -1,14 +1,15 @@
 import { Router } from 'express'
-//import Container from '../conteiner.js'; 
+import Container from '../conteiner.js'; 
 const archivo = './../productos.txt';
 import multer from 'multer'
+import __dirname from '../utils.js';
 
 const router = Router(); 
-//const containerProducts = new Container(); 
+const containerProducts = new Container(); 
 
 const storage = multer.diskStorage({ 
     destination: function (req, file, cb) {
-        cb(null, __dirname + './../imagenes');
+        cb(null, __dirname + '../../src/imagenes');
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);

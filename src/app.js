@@ -1,4 +1,4 @@
-import routerProduct from './router/products.router.js';
+import routerProduct from './router/products.router.js'; {}
 import express from 'express';
 import __dirname from './utils.js';
 import { conectameMongodb } from './config/config.db.js';
@@ -7,12 +7,29 @@ import { config } from './config/config.js';
 import { userModel } from './models/user.model.js';
 import { productModel } from './models/product.model.js';
 import winston from 'winston';
-//import sessions from 'sessions';
- 
+import Sessions from 'sessions';
+import path from 'path';
+import { ObjectId } from 'mongoose';
+import { Server } from 'socket.io';
+import productRouter from './router/products.router.js'; 
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import mongoose from 'mongoose';
+import ConnectMongo from 'connect-mongo';
+import inicializandoPassport from './middlewares/passport-config.js';
+import { Passport } from 'passport';
+//import config from './config/config.js';
+import sessionsRouter from './router/sessions.router.js';
+import passportConfig from './middlewares/passport-config.js';
+//import ApiLoggerRouter from './router/';
+import { setLoggerLevel } from './errorManagerment/logger.js';
+import { errorHandler } from './errorManagerment/errorHandler.js';
+//import swaggerUiExpress from 'swagger-ui-express';
+//import swaggerJsdoc from 'swagger';
+import passportLocal from 'passport-local';
+
 const app = express();
-const port = 3000; 
+const port = config.PORT; 
 const nombreDeLaEmpresa = 'Backend-final';
-const userEmail = 'soymigueprogramador';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.urlencoded({extended: true }));
@@ -41,7 +58,7 @@ app.post('/registro', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await UserModel({ email });
     if (!user) {
       return res.status(400).send('El correo electrónico o la contraseña son incorrectos');
     }
@@ -60,5 +77,3 @@ app.post('/login', async (req, res) => {
 app.listen(port, (req, res) => {
     console.log(`${nombreDeLaEmpresa} escuchando en el puerto ${port}`);
 });
-
-console.log(userEmail);

@@ -1,4 +1,4 @@
-/*import fs from 'fs';
+import fs from 'fs';
 import express from 'express';
 
 class Container {
@@ -84,4 +84,4 @@ class Container {
     }
 }
 
-export default Container;*/
+export default Container;
