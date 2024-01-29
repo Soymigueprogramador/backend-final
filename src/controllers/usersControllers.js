@@ -1,4 +1,4 @@
-/*import { Router } from 'express';
+import { Router } from 'express';
 import bodyParser from 'body-parser';
 import { config } from '../config/config.js';
 import dtoUsuario from '../middlewares/dtoUsuarios.js'; 
@@ -45,4 +45,4 @@ async function current (req,res) {
 async function current1 (req,res) {
   return res.redirect('./current')
 };
-export default {errorLogin, errorLoginGitHub, errorRegistro, Login ,logout, current, current1}*/
+export default {errorLogin, errorLoginGitHub, errorRegistro, Login ,logout, current, current1}

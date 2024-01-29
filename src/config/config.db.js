@@ -5,11 +5,11 @@ import { loggers } from 'winston';
 
 dotenv.config({ path: './.env' }); 
 
-const username = 'soymigueprogramador';
-const password = 'loquiero3d';
-const dbName = 'MG-lo-quiero-3d-database';
+const username = config.USER_NAME
+const password = config.PASSWORD
+const dbName = config.DB_NAME
 
-const miUrlMongodb = 'mongodb+srv://soymigueprogramador:loquiero3d@mg-lo-quiero-3d-databas.ph2h9f6.mongodb.net/${dbName}?retryWrites=true&w=majority';
+const miUrlMongodb = config.MONGO_URL
 
 export async function conectameMongodb() {
     try {

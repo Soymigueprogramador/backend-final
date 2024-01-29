@@ -1,61 +1,137 @@
-import { Router } from 'express'
-import Container from '../conteiner.js'; 
-const archivo = './../productos.txt';
-import multer from 'multer'
-import __dirname from '../utils.js';
+import express from "express";
+import fs from 'fs';
+import { body, validationResult } from 'express-validator';
 
-const router = Router(); 
-const containerProducts = new Container(); 
+const router = express.Router();
+const productsPath = './products.json';
 
-const storage = multer.diskStorage({ 
-    destination: function (req, file, cb) {
-        cb(null, __dirname + '../../src/imagenes');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+const validacionParaAgregarProductos = [
+    body('title').notEmpty().isString(),
+    //body('description').notEmpty().isString(),
+    //body('code').notEmpty().isString(),
+    body('price').notEmpty().isNumeric(),
+    //body('stock').notEmpty().isNumeric(),
+    //body('category').notEmpty().isString(),
+    //body('status').notEmpty().isBoolean(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.setHeader('content-type', 'application/json');
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
     }
-});
+];
 
-router.use(multer({ storage }).single('foto'));
-    router.get('/', (req, res) => {
-    res.json(containerProducts.getAll(archivo)); 
-});
+const validacionParaActualizarProductos = [
+    body('title').optional().isString(),
+    //body('description').optional().isString(),
+    //body('code').optional().isString(),
+    body('price').optional().isNumeric(),
+    //body('stock').optional().isNumeric(),
+    //body('category').optional().isString(),
+    //body('status').optional().isBoolean(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.setHeader('content-type', 'application/json');
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+];
 
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    const product = containerProducts.getById(parseInt(id), archivo); 
-    product ? res.json({ product_id: id, producto: product }) : res.json({ mensaje: 'Producto no encontrado ' + id }); 
-});
+const obtenerUltimoId = (item) => {
+    if (item.length === 0) {
+        return 1;
+    }
+    const ultimoArticulo = item[item.length - 1];
+    return ultimoArticulo + 1;
+};
 
-router.post('/', (req, res) => {
-    const body = req.body;
-    const foto = req.file;
-    body.thumbnail = foto.filename;
-    containerProducts.saveProduct(body, archivo); 
-    res.json({ mensaje: 'Producto guardado', producto: body });
-});
+const leerArchivosJson = (filePath) => {
+    try {
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf-8');
+            return JSON.parse(data); 
+        } else {
+            const data = [];
+            return data;
+        }
+    } catch (error) {
+        console.log('Error al leer el archivo', error);
+    }
+};
 
-router.put('/:id', (req, res) => { 
-    const { id } = req.params;
-    const { body } = req;
-    const product = containerProducts.getById(parseInt(id), archivo); 
-    if (product) {
-        containerProducts.updateProduct(parseInt(id), body, archivo); 
-        res.json({ mensaje: 'Producto actualizado', producto: body });
+const escribirUnNuevoArchivoJson = (filePath, data) => {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8'); 
+};
+
+router.get('/products', (req, res) => {
+    const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
+    const products = readJSONfile(productsPath);
+    res.setHeader('content-type', 'application/json');
+    if (limit) {
+        const limiteDeProductos = products.slice(0, limit);
+        res.json(limiteDeProductos);
     } else {
-        res.json({ mensaje: 'Producto no encontrado ' + id }); 
+        res.json(products);
     }
 });
 
-router.delete('/:id', (req, res) => { 
-    const { id } = req.params;
-    const product = containerProducts.getById(parseInt(id), archivo); 
+router.get('/products/:pid', (req, res) => {
+    const producto = readJSONfile(productsPath);
+    const product = products.find(p => p.id === req.params.pid);
+    res.setHeader('content-type', 'application/json');
     if (product) {
-        containerProducts.deleteById(parseInt(id), archivo); 
-        res.json({ product_id: id, mensaje: 'Producto eliminado' });
+        res.json(product);
     } else {
-        res.json({ mensaje: 'Producto no encontrado ' + id}); 
+        res.status(404).end('Producto no encontrado');
     }
 });
 
+router.post('/products', validacionParaAgregarProductos, (req, res) => {
+    const producto = readJSONfile(productsPath);
+    const nuevoProducto = req.body;
+    nuevoProducto.id = obtenerUltimoId(products);
+    if (nuevoProducto.status = false) {nuevoProducto.status = true};
+    producto.push(nuevoProducto);
+    escribirUnNuevoArchivoJson(productsPath, producto);
+    res.setHeader('content-type', 'application/json');
+    res.status(201).json(nuevoProducto);
+});
+
+router.put('/products/:pid', validacionParaActualizarProductos, (req, res) => {
+    const products = readJSONfile(productsPath);
+    const productId = req.params.pid;
+    const actualizarProducto = req.body;
+    const index = products.findIndex(p => p.id === productId); 
+    if (index !== -1) {
+        products[ index ] = { ...products[ index ], ...actualizarProducto };
+        escribirUnNuevoArchivoJson(productsPath, products);
+        res.setHeader('content-type', 'application/json');
+        res.json(products[ index ]);
+    }
+});
+
+router.delete('/products/:pid', (req, res) => {
+    const products = readJSONfile(productsPath);
+    const productId = req.params.pid;
+    const index = products.findIndex(p => p.id === productId);
+    if (index !== -1) {
+        const filtrarProducto = products.filter(p => p.id === productId);
+        res.setHeader('content-type', 'application/json');
+        res.send('Producto con el ID ${productId} fue eliminado'); 
+    } else {
+        res.setHeader('content-type', 'application/json');
+    res.status(404).send('Producto no encontrado');
+    }
+});
+
+const getProducts = () => {
+    const products = readJSONfile(productsPath);
+    return products;
+};
+
+export {getProducts}
 export default router;

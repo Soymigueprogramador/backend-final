@@ -1,4 +1,4 @@
-/*import { CustomError } from '../errorManagerment/diccionarioDeErrores.js'; 
+import { CustomError } from '../errorManagerment/diccionarioDeErrores.js'; 
 
 const loggerTest = (req, res) => {
     CustomError.createCustomError(991);
@@ -10,4 +10,4 @@ const loggerTest = (req, res) => {
     res.send('logs probados, si estas en el modo de desarrollador anda mirando la consola para encontrar errores, si estas en el modo de produccion tendrias que mirar el archivo errors.log');
 };
 
-export default { loggerTest };*/
+export default { loggerTest };

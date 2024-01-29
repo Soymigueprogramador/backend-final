@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import { cartsModel } from "../dao/models/cart.model.js";
-import { userModel } from '../dao/models/user.model.js';
+import { userModel } from '../models/user.model.js';
 import { Router } from "express";
 import { createHash } from "../utils.js";
 import { config } from "../config/config.js";

@@ -6,7 +6,7 @@ import { config } from '../config/config.js'
 
 const router = Router ()
 
-//mongoose.connect(config.MONGO_URL);
+mongoose.connect(config.MONGO_URL);
 
 export class productsDataManager { 
 

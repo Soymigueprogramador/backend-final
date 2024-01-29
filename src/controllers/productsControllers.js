@@ -1,4 +1,4 @@
-/*import { ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { productServices } from '../services/productsServices.js';
 import { Router } from 'express';
 const router = Router ()
@@ -161,4 +161,4 @@ async function borrarProducto(req, res) {
     res.status(500).send('Error en el servidor')
   }
 };
-export default {getProducts, getProductById, crearProducto, actualizarProducto, borrarProducto };*/
+export default {getProducts, getProductById, crearProducto, actualizarProducto, borrarProducto };

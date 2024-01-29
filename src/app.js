@@ -17,15 +17,17 @@ import mongoose from 'mongoose';
 import ConnectMongo from 'connect-mongo';
 import inicializandoPassport from './middlewares/passport-config.js';
 import { Passport } from 'passport';
-//import config from './config/config.js';
 import sessionsRouter from './router/sessions.router.js';
 import passportConfig from './middlewares/passport-config.js';
-//import ApiLoggerRouter from './router/';
+import ApiLoggerRouter from './router/logger.router.js';
 import { setLoggerLevel } from './errorManagerment/logger.js';
 import { errorHandler } from './errorManagerment/errorHandler.js';
-//import swaggerUiExpress from 'swagger-ui-express';
-//import swaggerJsdoc from 'swagger';
+import swaggerUiExpress from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 import passportLocal from 'passport-local';
+import passportGithub2 from 'passport-github2';
+import cargarProductos from './router/cargarProductos.router.js'
+import apiProductsRouter from './router/products.router.js'; 
 
 const app = express();
 const port = config.PORT; 
@@ -74,6 +76,9 @@ app.post('/login', async (req, res) => {
 });
 
 
+
 app.listen(port, (req, res) => {
     console.log(`${nombreDeLaEmpresa} escuchando en el puerto ${port}`);
 });
+
+export default app.js;
