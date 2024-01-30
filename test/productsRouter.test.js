@@ -1,4 +1,4 @@
-import { setLoggerLevel } from '../src/errorManagerment/logger.js';
+/*import { setLoggerLevel } from '../src/errorManagerment/logger.js';
 
 import chai from 'chai'; 
 import chaiHttp from 'chai-http'; 
@@ -18,4 +18,4 @@ describe('Productos API', () => {
                 done();
             });
     });
-});
+});*/

@@ -28,13 +28,13 @@ import passportLocal from 'passport-local';
 import passportGithub2 from 'passport-github2';
 import cargarProductos from './router/cargarProductos.router.js'
 import apiProductsRouter from './router/products.router.js'; 
-import specs from './swagger.js';
+//import specs from './swagger.js';
 
 const app = express();
 const port = config.PORT; 
 const nombreDeLaEmpresa = 'Backend-final';
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.urlencoded({extended: true }));
 app.use(express.json());
