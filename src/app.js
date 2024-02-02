@@ -31,15 +31,32 @@ import apiProductsRouter from './router/products.router.js';
 //import specs from './swagger.js';
 
 const app = express();
+
 const port = config.PORT; 
 const nombreDeLaEmpresa = 'Backend-final';
+const authenticateUser = (req, res, next) => {
 
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-app.use(express.urlencoded({ extended: true }));
+  if (!req.user) {
+    return res.status(401).json({ message: 'Usuario no autenticado' });
+  }
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Permiso denegado' });
+  }
+  next();
+};
+
 app.use(express.urlencoded({extended: true }));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
-app.use('/profile', routerProduct);
+app.use('/productos', express.static('/productos'));
+app.use('/profile', cargarProductos);
+
+app.get('/admin/dashboard', authenticateUser, (req, res) => {
+  res.json({ message: 'Panel de administrador' });
+});
+app.get('/profile', (req, res) => {
+  res.json({ message: 'Perfil de usuario' });
+});
 
 app.get('/index', (req, res) => {
     res.sendFIle(--__dirname + '/index.html');
@@ -47,33 +64,37 @@ app.get('/index', (req, res) => {
 
 app.post('/registro', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).send('Todos los campos son requeridos');
+  if (!email || !password === 'user' ) {
+    return res.status(201).send('Bienevenido usuario');
+    return res.redirect('/mostrarProductos.html');
   }
   const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).send('El correo electrónico ya está en uso');
+  if (existingUser === 'user') {
+    return res.status(400).send('Usuario ya registrado');
+    return res.redirect('/registro.html'); 
+    alert('Usuario ya registrado'); 
   }
   const newUser = new User({ email, password });
   await newUser.save();
-  res.send('¡Registro exitoso!');
+  res.send('¡Usuario registrado exitoso!');
 });
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  try {
-    const user = await UserModel({ email });
-    if (!user) {
-      return res.status(400).send('El correo electrónico o la contraseña son incorrectos');
-    }
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(400).send('El correo electrónico o la contraseña son incorrectos');
-    }
-    res.redirect('/cargarProductos.html');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error de servidor');
+  const emailAdmin = 'coder2023@gmail.com';
+  const passwordAdmin = 123456789;
+  const emailUser = 'soymigueprogramador@gmail.com'; 
+  const passwordUser = 1526644514; 
+  if (email === 'coder2023@gmail.com' && password === 123456789) {
+    return res.status(201).send('Vista para el administrador');
+    return res.redirect('/cargarProductos.html');
+    return
+  } else if (email === 'soymigueprogramador@gmail.com' && password === 1526644514) {
+    return res.status(201).send('Bienvenido usuario');
+    return res.redirect('/mostrarProductos.html');
+    return
+  } else {
+    return res.status(401).send('Te tenes que logear con un email y password');
   }
 });
 
@@ -81,4 +102,4 @@ app.listen(port, (req, res) => {
     console.log(`${nombreDeLaEmpresa} escuchando en el puerto ${port}`);
 });
 
-export default app.js;
+export default app.js; 

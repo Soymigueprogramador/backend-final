@@ -2,19 +2,16 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 //import { userModel } from './user.model.js';
 
-// La cantidad de veces que se estará encriptando el password. 
 const encriptarPassword = 10;
 const usersCollection = 'soymigueprogramador';
 
-// Esquema del usuario.
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' }
 });
 
-// Función que se ejecuta antes de guardar el usuario en la base de datos.
 userSchema.pre('save', function(next) {
-    // Verificamos si los datos del password son correctos o si se está modificando
     if(this.isModified('password')) {
         const document = this;
         bcrypt.hash(document.password, encriptarPassword, (error, hashedPassword) => {
@@ -30,7 +27,6 @@ userSchema.pre('save', function(next) {
     }
 });
 
-// Funcion para comparar si el password existe y es correcto o no lo es.
 userSchema.methods.passwordCorrect = function(password, callback) {
     bcrypt.compare(password, this.password, function(error, same) {
         if(error) {
