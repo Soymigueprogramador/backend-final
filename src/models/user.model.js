@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
+import { config } from '../config/config.js';
 import bcrypt from 'bcrypt';
-//import { userModel } from './user.model.js';
 
 const encriptarPassword = 10;
 const usersCollection = 'soymigueprogramador';

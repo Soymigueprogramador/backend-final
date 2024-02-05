@@ -26,12 +26,13 @@ import swaggerUiExpress from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import passportLocal from 'passport-local';
 import passportGithub2 from 'passport-github2';
-import cargarProductos from './router/cargarProductos.router.js'
-import apiProductsRouter from './router/products.router.js'; 
+import cargarProductos from './router/cargarProductos.router.js' 
+import apiProductsRouter from './router/products.router.js';
+import usersRouter from './router/users.router.js' 
 //import specs from './swagger.js';
 
 const app = express();
-
+const users = 'users';
 const port = config.PORT; 
 const nombreDeLaEmpresa = 'Backend-final';
 const authenticateUser = (req, res, next) => {
@@ -63,21 +64,30 @@ app.get('/index', (req, res) => {
 });
 
 app.post('/registro', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password === 'user' ) {
-    return res.status(201).send('Bienevenido usuario');
-    return res.redirect('/mostrarProductos.html');
+  const { email, password, passwordRepeat } = req.body;
+  
+
+  if (!email || !password || !passwordRepeat) {
+    return res.status(400).send('Por favor, complete todos los campos.');
   }
-  const existingUser = await User.findOne({ email });
-  if (existingUser === 'user') {
+  
+  // Verifica si las contraseñas coinciden
+  if (password !== passwordRepeat) {
+    return res.status(400).send('Las contraseñas no coinciden.');
+  }
+
+  // Verifica si el usuario ya está registrado
+  const existingUser = await Users.findOne({ email });
+  if (existingUser) {
     return res.status(400).send('Usuario ya registrado');
-    return res.redirect('/registro.html'); 
-    alert('Usuario ya registrado'); 
   }
-  const newUser = new User({ email, password });
+
+  // Crea un nuevo usuario
+  const newUser = new Users({ email, password });
   await newUser.save();
-  res.send('¡Usuario registrado exitoso!');
+  res.redirect('/mostrarProductos.html');
 });
+
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
